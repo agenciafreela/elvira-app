@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<title>Elvira Brand&atilde;o</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<!-- CSS jQuery Mobile  -->
+		<link rel="stylesheet" href="css/jquerymobilestructure.css" />
+		<link rel="stylesheet" href="css/jquerymobile.css" />
+
+		<!-- CSS Custom -->
+		<link rel="stylesheet" href="css/estilo.css" />
+
+		<!-- Scripts jQuery e jQuery Mobile -->
+		<script src="js/jquery.js"></script>
+		<script src="js/jquery.latests.js"></script>
+		<script src="js/script.js"></script>
+		<script src="js/script-mobile.js"></script>
+		<script src="js/jquerymobile.js"></script>
+
+		<script src="phonegap.js" /></script>
+		<script src="childbrowser.js" /></script>
+
+
+	</head>
+
+
+	<body  onload="initialize();">
+
+		<div data-role="page" id="tudo">
+
+			<div data-role="header" class="topo" data-theme="c">
+				<center><img style="width:200px; padding:10px;" src="img/logo-elvira.png"></center>
+			</div><!-- /header -->
+
+			<div data-role="header" data-theme="b" >
+				<div style="height:3px;"></div>
+			</div>
+
+
+			<div data-role="header" data-theme="b">
+				<h1>Últimas Notícias</h1>
+			</div>
+
+			<div data-role="content" class="conteudo">
+
+				<div class="loading">
+					<p>
+						Aguarde, carregando...
+					</p>
+					<img src="img/ajax-loader.gif">
+
+
+					<p class="obs">
+						Caso o tempo de espera seja muito longo, verifique sua conexão com a internet.
+					</p>
+
+				</div>
+
+			</div><!-- /content -->
+
+			<div data-role="footer" id="footer" data-position="fixed">
+				<div data-role="navbar">
+						<ul>
+							<li><a href="index.html" data-icon="home" >Home</a></li>
+							<li><a href="eventos.html"  data-icon="grid">Agenda</a></li>
+							<li><a href="noticias.html"  data-icon="info" class="ui-btn-active">Noticias</a></li>
+							<!--<li><a href="licoes.html" data-icon="alert">Li&ccedil;&otilde;es</a></li> -->
+							<li><a href="area_restrita.html" data-icon="star">Área Restrita</a></li>
+						</ul>
+				</div>
+			</div> <!-- /footer -->
+
+		</div><!-- /page -->
+
+		<script type="text/javascript">
+
+			var vm = { q:"1" };
+
+
+			//Pega os ultimos posts do site via Json
+			$.ajax({
+				url: "http://elvirabrandao.com.br/colegio-bkp/?json=get_recent_posts&count=10&date_format=d/m/Y - G:i",
+	            type: "GET",
+	            dataType: "jsonp",//ou jsonp dependendo da api
+	            contentType: "application/json",
+	            success: function(data){
+
+		            $('.loading').fadeOut();
+
+	            	var i, string;
+
+	         		for (var i in data.posts){
+		            		var url = data.posts[i].url;
+		            		var titulo =  data.posts[i].title;
+		            		var data_noticia = data.posts[i].date;
+		            		try {
+
+		            			var img = data.posts[i].attachments[0].url;
+
+		            		} catch(e) {
+
+		            		}
+
+		            		var excerpt = data.posts[i].excerpt;
+
+
+
+		            		string = "<div class='noticia'> <a class='link_site' target='_blank' data-href='" + url +"' href='#'><h3>"+ titulo + "</h3></a>";
+
+		            		if ( img != "" && img != "undefined") {
+
+			            		string = string + "<br/><img width='100%' src='" + img +"'>";
+
+		            		}
+
+
+		            		string = string + "<p>" + excerpt + "</p>";
+
+		            		string = string + "<p class='data-post'>Postado em: " + data_noticia + "</p>";
+
+
+		            		$('.conteudo').append(string);
+
+	            	}
+
+
+	            },
+	            error: function() {
+	            	$('.conteudo').html("Erro ao carregar as notícias!");
+	            }
+          });
+
+          $('.link_site').live('click', function(){
+
+				//Abre a página no navegador padrão do dispositivo
+				window.plugins.childBrowser.openExternal($(this).data('href') );
+
+				//Abre a página innApp
+				//window.plugins.childBrowser.showWebPage($(this).data('href'));
+
+			});
+
+
+        </script>
+
+	</body>
+</html>

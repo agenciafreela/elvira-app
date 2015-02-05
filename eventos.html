@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<title>Elvira Brand&atilde;o</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<!-- CSS jQuery Mobile  -->
+		<link rel="stylesheet" href="css/jquerymobilestructure.css" />
+		<link rel="stylesheet" href="css/jquerymobile.css" />
+
+		<!-- CSS Custom -->
+		<link rel="stylesheet" href="css/estilo.css" />
+
+		<!-- Scripts jQuery e jQuery Mobile -->
+		<script src="js/jquery.js"></script>
+		<script src="js/jquery.latests.js"></script>
+		<script src="js/script.js"></script>
+		<script src="js/script-mobile.js"></script>
+		<script src="js/jquerymobile.js"></script>
+
+		<script src="phonegap.js" /></script>
+		<script src="childbrowser.js" /></script>
+	</head>
+
+	<body>
+
+		<div data-role="page" id="tudo">
+
+			<div data-role="header" class="topo" data-theme="c">
+				<center><img style="width:200px; padding:10px;" src="img/logo-elvira.png"></center>
+			</div><!-- /header -->
+
+			<div data-role="header" data-theme="b" >
+				<div style="height:3px;"></div>
+			</div>
+
+			<div data-role="header" data-theme="b" >
+				<h1>Agenda</h1>
+			</div>
+
+			<div data-role="content" class="conteudo">
+
+				<div class="loading">
+					<p>
+						Aguarde, carregando...
+					</p>
+					<img src="img/ajax-loader.gif">
+
+
+					<p class="obs">
+						Caso o tempo de espera seja muito longo, verifique sua conexão com a internet.
+					</p>
+
+				</div>
+
+
+			</div><!-- /content -->
+
+			<div data-role="footer" id="footer" data-position="fixed">
+				<div data-role="navbar">
+						<ul>
+							<li><a href="index.html" data-icon="home" >Home</a></li>
+							<li><a href="eventos.html" data-icon="grid" class="ui-btn-active" >Agenda</a></li>
+							<li><a href="noticias.html" data-icon="info">Noticias</a></li>
+							<!--<li><a href="licoes.html" data-icon="alert">Li&ccedil;&otilde;es</a></li> -->
+							<li><a href="area_restrita.html" data-icon="star">Área Restrita</a></li>
+						</ul>
+				</div>
+			</div> <!-- /footer -->
+
+		</div><!-- /page -->
+
+
+	<script type="text/javascript">
+
+			var vm = { q:"1" };
+			var i;
+
+			//Pega os ultimos posts do site via Json
+			$.ajax({
+				url: "http://elvirabrandao.com.br/colegio-bkp/?json=get_recent_posts&count=5&post_type=eventos&custom_fields=_start_month,_start_day,_start_hour,_start_minute",
+	            type: "GET",
+	            dataType: "jsonp",//ou jsonp dependendo da api
+	            contentType: "application/json",
+	            success: function(data){
+	            	//$('.conteudo').html(data.posts[0].id);
+	            	//$('.conteudo').append("<h1>Ultimos Eventos:</h1>");
+	            	$('.loading').fadeOut();
+	            	console.log(data);
+	            	var i, string;
+	            	//for (i=1; i<=5; i++) {
+		            for (i in data.posts){
+		            		try {
+
+		            			var img = data.posts[i].thumbnail;
+
+		            		} catch(e) {
+
+		            		}
+
+		            		var data_evento = data.posts[i].custom_fields._start_day + "/" + data.posts[i].custom_fields._start_month + " ás " + data.posts[i].custom_fields._start_hour + ":" + data.posts[i].custom_fields._start_minute;
+
+
+		            		string = "<div class='noticia'>";
+		            		string = string + "<a target='_blank' class='link_site' href='#' data-href='" + data.posts[i].url +"'><h3>"+ data.posts[i].title + "</h3></a>";
+		            		if ( img != "" && img != "undefined") {
+
+			            		string = string + "<br/><img width='100%' src='" + img +"'>";
+
+		            		}
+		            		string = string + "<p class='data-evento'>Data do Evento: " + data_evento +"</p>";
+		            		string = string + "</div>";
+
+		            		$('.conteudo').append(string);
+	            	}
+
+
+
+	            },
+	            error: function() {
+	            	$('.conteudo').html("Erro ao carregar os eventos!");
+	            }
+          });
+
+		  $('.link_site').live('click', function(){
+
+				//Abre a página no navegador padrão do dispositivo
+				window.plugins.childBrowser.openExternal($(this).data('href') );
+
+				//Abre a página innApp
+				//window.plugins.childBrowser.showWebPage($(this).data('href'));
+
+		   });
+        </script>
+
+
+	</body>
+</html>
