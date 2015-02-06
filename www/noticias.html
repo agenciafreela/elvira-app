@@ -21,7 +21,7 @@
 		<script src="js/jquerymobile.js"></script>
 
 		<script src="cordova.js"></script>
-		<script src="childbrowser.js"></script>
+        <script src="inappbrowser.js"></script>
 
 
 	</head>
@@ -137,11 +137,13 @@
 
           $('.link_site').live('click', function(){
 
-				//Abre a página no navegador padrão do dispositivo
-				window.plugins.childBrowser.openExternal($(this).data('href') );
 
-				//Abre a página innApp
-				//window.plugins.childBrowser.showWebPage($(this).data('href'));
+            //Abre a página no navegador padrão do dispositivo
+//			window.plugins.childBrowser.openExternal($(this).data('href') );
+
+
+            //Abre a página innApp
+            var ref = window.open($(this).data('href'), '_blank', 'location=yes');
 
 			});
 
