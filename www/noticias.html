@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-
 		<title>Elvira Brand&atilde;o</title>
 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,7 +51,6 @@
 					</p>
 					<img src="img/ajax-loader.gif">
 
-
 					<p class="obs">
 						Caso o tempo de espera seja muito longo, verifique sua conexão com a internet.
 					</p>
@@ -79,50 +77,51 @@
 
 			var vm = { q:"1" };
 
-
 			//Pega os ultimos posts do site via Json
 			$.ajax({
-				url: "http://elvirabrandao.com.br/colegio-bkp/?json=get_recent_posts&count=10&date_format=d/m/Y - G:i",
+                url: "http://www.elvirabrandao.com.br/colegio/acontece/json/",
+//                url: "http://localhost:8888/elvira-site/acontece/json/",
 	            type: "GET",
-	            dataType: "jsonp",//ou jsonp dependendo da api
+	            dataType: "json",//ou jsonp dependendo da api
 	            contentType: "application/json",
 	            success: function(data){
 
 		            $('.loading').fadeOut();
 
-	            	var i, string;
+	            	var string;
 
+                    var url_site = data.url;
+                    var url_static = data.static_url;
 	         		for (var i in data.posts){
-		            		var url = data.posts[i].url;
-		            		var titulo =  data.posts[i].title;
-		            		var data_noticia = data.posts[i].date;
-		            		try {
+                        var url = url_site + data.posts[i].id;
+                        var titulo =  data.posts[i].title;
 
-		            			var img = data.posts[i].attachments[0].url;
+                        var data_noticia = new Date(data.posts[i].created_at);
+                        try {
 
-		            		} catch(e) {
+                            var img = data.posts[i].image;
 
-		            		}
+                        } catch(e) {
 
-		            		var excerpt = data.posts[i].excerpt;
+                        }
 
+                        var excerpt = data.posts[i].content;
 
+                        string = "<div class='noticia'> <a class='link_site' target='_blank' data-href='" + url +"' href='#'><h3>"+ titulo + "</h3></a>";
 
-		            		string = "<div class='noticia'> <a class='link_site' target='_blank' data-href='" + url +"' href='#'><h3>"+ titulo + "</h3></a>";
+                        if ( img != "" && img != "undefined" && img != null) {
 
-		            		if ( img != "" && img != "undefined") {
+                            string = string + "<br/><img width='100%' src='" + url_static + img +"'>";
 
-			            		string = string + "<br/><img width='100%' src='" + img +"'>";
-
-		            		}
-
-
-		            		string = string + "<p>" + excerpt + "</p>";
-
-		            		string = string + "<p class='data-post'>Postado em: " + data_noticia + "</p>";
+                        }
 
 
-		            		$('.conteudo').append(string);
+                        string = string + "<p>" + excerpt + "</p>";
+
+                        string = string + "<p class='data-post'>Postado em: " + data_noticia.toLocaleString() + "</p>";
+
+
+                        $('.conteudo').append(string);
 
 	            	}
 
@@ -135,10 +134,8 @@
 
           $('.link_site').live('click', function(){
 
-
             //Abre a página no navegador padrão do dispositivo
 //			window.plugins.childBrowser.openExternal($(this).data('href') );
-
 
             //Abre a página innApp
             var ref = window.open($(this).data('href'), '_blank', 'location=yes');
