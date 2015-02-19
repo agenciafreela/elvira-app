@@ -81,9 +81,9 @@
 
 			//Pega os ultimos posts do site via Json
 			$.ajax({
-				url: "http://elvirabrandao.com.br/colegio-bkp/?json=get_recent_posts&count=5&post_type=eventos&custom_fields=_start_month,_start_day,_start_hour,_start_minute",
+				url: "http://www.elvirabrandao.com.br/colegio/elvira/json",
 	            type: "GET",
-	            dataType: "jsonp",//ou jsonp dependendo da api
+	            dataType: "json",//ou jsonp dependendo da api
 	            contentType: "application/json",
 	            success: function(data){
 	            	//$('.conteudo').html(data.posts[0].id);
@@ -93,28 +93,34 @@
 	            	var i, string;
 	            	//for (i=1; i<=5; i++) {
 		            for (i in data.posts){
-		            		try {
+                        try {
 
-		            			var img = data.posts[i].thumbnail;
+                            var img = data.posts[i].thumbnail;
 
-		            		} catch(e) {
+                        } catch(e) {
 
-		            		}
+                        }
 
-		            		var data_evento = data.posts[i].custom_fields._start_day + "/" + data.posts[i].custom_fields._start_month + " ás " + data.posts[i].custom_fields._start_hour + ":" + data.posts[i].custom_fields._start_minute;
+//                        var data_evento = data.posts[i].custom_fields._start_day + "/" + data.posts[i].custom_fields._start_month + " ás " + data.posts[i].custom_fields._start_hour + ":" + data.posts[i].custom_fields._start_minute;
+                        var excerpt = data.posts[i].content;
 
+                        if(excerpt != "" && excerpt != "undefined" && excerpt != null){
+                            string = "<div class='noticia'>";
+                            string = string +
+    //                        "<a target='_blank' class='link_site' href='#' data-href='" + data.posts[i].url +"'>" +
+                            "<h3>"+ data.posts[i].title + "</h3>";
+    //                        +  "</a>";
+                            if (img != "" && img != "undefined" && img != null) {
 
-		            		string = "<div class='noticia'>";
-		            		string = string + "<a target='_blank' class='link_site' href='#' data-href='" + data.posts[i].url +"'><h3>"+ data.posts[i].title + "</h3></a>";
-		            		if ( img != "" && img != "undefined") {
+                                string = string + "<br/><img width='100%' src='" + img +"'>";
 
-			            		string = string + "<br/><img width='100%' src='" + img +"'>";
+                            }
+    //                        string = string + "<p class='data-evento'>Data do Evento: " + data_evento +"</p>";
+                            string = string + "<p>" + excerpt + "</p>";
+                            string = string + "</div>";
 
-		            		}
-		            		string = string + "<p class='data-evento'>Data do Evento: " + data_evento +"</p>";
-		            		string = string + "</div>";
-
-		            		$('.conteudo').append(string);
+                            $('.conteudo').append(string);
+                            }
 	            	}
 
 
